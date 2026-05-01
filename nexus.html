@@ -717,7 +717,7 @@ function getMeetState(){
   const mins=h*60+m;
   const classStart=20*60+30; // 8:30PM = 1230 mins
   const classEnd=classStart+90; // 2 hours
-  const joinWindow=classStart-500; // 15 min before
+  const joinWindow=classStart-15; // 15 min before
 
   if(isFriday&&mins>=classStart&&mins<classEnd) return 'live';
   if(isFriday&&mins>=joinWindow&&mins<classStart) return 'soon';
