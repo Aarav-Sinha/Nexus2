@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Register — Nexus</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%231a0e2e'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='26' font-family='serif'%3E✦%3C/text%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+:root{--ink:#0d0a1a;--ink2:#1a1530;--gold:#e8c96b;--gold2:#f5dfa0;--t0:#f0ecff;--t1:#c8c2e0;--t2:#847fa0;--t3:#4a4668;--rose:#ff7b7b;--sage:#7bc67e;--rim:rgba(255,255,255,.08);--r3:24px;--sh:0 20px 60px rgba(0,0,0,.7);--shg:0 8px 32px rgba(232,201,107,.2);--serif:'Cormorant Garamond',serif;--sans:'DM Sans',sans-serif;--mono:'Fira Code',monospace}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:var(--sans);background:var(--ink);color:var(--t0);font-size:15px;display:flex;align-items:center;justify-content:center;padding:20px 0}
+.bg{position:fixed;inset:0;pointer-events:none}
+.bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 10% 0%,rgba(100,60,180,.28),transparent 60%),radial-gradient(ellipse 60% 50% at 90% 100%,rgba(40,100,120,.22),transparent 55%)}
+.card{position:relative;z-index:1;width:calc(100% - 32px);max-width:500px;border-radius:var(--r3);background:linear-gradient(145deg,rgba(26,21,48,.97),rgba(20,16,36,.99));border:1px solid rgba(232,201,107,.18);padding:44px 40px 38px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.06);animation:asc .65s cubic-bezier(.16,1,.3,1) both}
+@keyframes asc{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+.star{font-size:2rem;display:block;text-align:center;margin-bottom:14px;filter:drop-shadow(0 0 16px rgba(232,201,107,.5))}
+h1{font-family:var(--serif);font-size:2.2rem;font-weight:700;text-align:center;background:linear-gradient(135deg,#f0ecff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:5px}
+.sub{text-align:center;color:var(--t2);font-size:.83rem;margin-bottom:26px}
+.form{display:flex;flex-direction:column;gap:14px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:.67rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t2)}
+.fi,.fsel,.fta{padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:10px;color:var(--t0);font-size:.87rem;outline:none;width:100%;transition:all .2s}
+.fi:focus,.fsel:focus{border-color:rgba(232,201,107,.38);background:rgba(232,201,107,.04)}
+.fi::placeholder{color:var(--t3)}
+.fsel option{background:#140f22;color:var(--t0)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* Subject checkboxes */
+.subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:180px;overflow-y:auto;padding:2px}
+.subj-opt{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;border:1px solid var(--rim);cursor:pointer;transition:all .18s;background:rgba(255,255,255,.02)}
+.subj-opt:hover{border-color:rgba(232,201,107,.25);background:rgba(232,201,107,.05)}
+.subj-opt.sel{border-color:rgba(232,201,107,.35);background:rgba(232,201,107,.1)}
+.subj-opt input{display:none}
+.subj-opt .mark{width:16px;height:16px;border-radius:5px;border:1.5px solid var(--rim);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:all .15s}
+.subj-opt.sel .mark{background:var(--gold);border-color:var(--gold);color:#0d0a1a}
+.subj-opt .nm{font-size:.8rem;color:var(--t1)}
+/* Phone verification */
+.phone-row{display:flex;gap:8px}
+.phone-row .fi{flex:1}
+.btn-otp{padding:11px 14px;border-radius:10px;border:1px solid rgba(232,201,107,.3);background:rgba(232,201,107,.1);color:var(--gold);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-otp:hover{background:rgba(232,201,107,.18)}
+.btn-otp:disabled{opacity:.4;cursor:default}
+.otp-row{display:none;gap:8px;margin-top:8px}
+.otp-row .fi{flex:1;letter-spacing:.2em;text-align:center;font-family:var(--mono)}
+.btn-verify{padding:11px 14px;border-radius:10px;border:none;background:var(--sage);color:#0d0a1a;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.phone-verified{display:none;font-size:.73rem;color:var(--sage);display:flex;align-items:center;gap:5px}
+/* Recaptcha */
+#recaptcha-container{margin-top:4px}
+.btn-sub{width:100%;padding:14px;border-radius:11px;border:none;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;background:var(--gold);color:#0d0a1a;margin-top:4px}
+.btn-sub:hover{background:var(--gold2);box-shadow:var(--shg);transform:translateY(-1px)}
+.btn-sub:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+.err{font-size:.73rem;color:var(--rose);min-height:18px;margin-top:2px}
+.note{font-size:.7rem;color:var(--t3);text-align:center;margin-top:14px}
+.note a{color:var(--gold)}
+.cred{text-align:center;padding-top:18px;margin-top:18px;border-top:1px solid var(--rim);font-size:.67rem;color:var(--t3);font-family:var(--mono)}
+.cred b{color:rgba(232,201,107,.45)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(60px);z-index:99;background:rgba(26,21,48,.97);border:1px solid var(--rim);border-radius:11px;padding:10px 18px;font-size:.82rem;color:var(--t0);box-shadow:var(--sh);transition:transform .3s,opacity .3s;opacity:0;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.err{border-color:rgba(255,123,123,.3);color:var(--rose)}
+.toast.ok{border-color:rgba(123,198,126,.3);color:var(--sage)}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid rgba(232,201,107,.15);border-top-color:var(--gold);animation:spin .75s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success-screen{display:none;text-align:center;padding:20px 0}
+.success-ic{font-size:3rem;margin-bottom:16px;filter:drop-shadow(0 0 16px rgba(123,198,126,.5))}
+.success-t{font-family:var(--serif);font-size:1.8rem;color:var(--t0);margin-bottom:8px}
+.success-s{font-size:.85rem;color:var(--t2);line-height:1.6}
+@media(max-width:500px){.card{padding:32px 20px 28px}.row2,.subj-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="card">
+  <span class="star">✦</span>
+  <h1>Register</h1>
+  <p class="sub">Create your teacher account · Pending admin approval</p>
+
+  <div id="form-wrap" class="form">
+    <!-- Personal info -->
+    <div class="row2">
+      <div class="fg"><label>Full Name *</label><input class="fi" id="r-name" placeholder="Your full name" autocomplete="name"/></div>
+      <div class="fg"><label>Email *</label><input class="fi" id="r-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>Password *</label><input class="fi" id="r-pw" type="password" placeholder="Min 6 characters" autocomplete="new-password"/></div>
+      <div class="fg"><label>Confirm Password *</label><input class="fi" id="r-pw2" type="password" placeholder="Repeat password" autocomplete="new-password"/></div>
+    </div>
+
+    <!-- Phone verification -->
+    <div class="fg">
+      <label>Phone Number (for verification)</label>
+      <div class="phone-row">
+        <input class="fi" id="r-phone" type="tel" placeholder="+91 98765 43210" autocomplete="tel"/>
+        <button class="btn-otp" id="btn-otp">Send OTP</button>
+      </div>
+      <div class="otp-row" id="otp-row">
+        <input class="fi" id="r-otp" placeholder="OTP" maxlength="6"/>
+        <button class="btn-verify" id="btn-verify">Verify</button>
+      </div>
+      <div id="phone-verified" style="display:none;font-size:.73rem;color:var(--sage);margin-top:4px;display:flex;align-items:center;gap:5px">✅ Phone verified!</div>
+      <div id="recaptcha-container" style="margin-top:6px"></div>
+      <span class="fi-hint" style="font-size:.65rem;color:var(--t3)">Phone verification is optional but recommended.</span>
+    </div>
+
+    <!-- Subjects -->
+    <div class="fg">
+      <label>Subjects You Teach * <span style="font-weight:400;opacity:.6;text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+      <div class="subj-grid" id="subj-grid">
+        <div class="ld-s" style="color:var(--t3);font-size:.8rem;padding:8px">Loading subjects…</div>
+      </div>
+      <span class="fi-hint">You can only access subjects assigned to you by admin.</span>
+    </div>
+
+    <div class="fg"><label>About / Note to Admin <span style="font-weight:400;opacity:.5;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <textarea class="fi" id="r-note" placeholder="e.g. I teach English for Classes 11 & 12 ISC…" style="min-height:70px;resize:vertical"></textarea>
+    </div>
+
+    <div class="err" id="r-err"></div>
+    <button class="btn-sub" id="r-btn">Submit Registration Request</button>
+    <p class="note">Already have an account? <a href="login.html">Sign in here</a></p>
+  </div>
+
+  <!-- Success screen -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-ic">✅</div>
+    <div class="success-t">Request Submitted!</div>
+    <p class="success-s">Your registration request has been sent to the admin.<br>You'll be notified once approved. You can then sign in.</p>
+    <a href="login.html" style="display:inline-flex;margin-top:20px;padding:11px 24px;border-radius:10px;background:rgba(232,201,107,.15);border:1px solid rgba(232,201,107,.3);color:var(--gold);font-size:.86rem;font-weight:600;text-decoration:none;transition:all .2s">Go to Sign In →</a>
+  </div>
+
+  <div class="cred">Developed by <b>Aarav Sinha</b></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const FC={apiKey:"AIzaSyCqEEBANVyt-ybQD8z-pys2V-07-lxEWjA",authDomain:"nexus-705ef.firebaseapp.com",projectId:"nexus-705ef",storageBucket:"nexus-705ef.firebasestorage.app",messagingSenderId:"982944171585",appId:"1:982944171585:web:de65b6827ca769565ba8c0"};
+const ADMIN="aaravhfs@gmail.com";
+if(!firebase.apps.length)firebase.initializeApp(FC);
+const auth=firebase.auth(), db=firebase.firestore();
+const $=id=>document.getElementById(id);
+let phoneVerified=false, confirmResult=null, selectedSubjects=[], recaptchaVerifier=null;
+
+function toast(msg,type){const t=$('toast');t.textContent=msg;t.className='toast show'+(type==='ok'?' ok':type==='err'?' err':'');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3200);}
+
+// Load subjects from Firestore
+async function loadSubjects(){
+  try{
+    const snap=await db.collection('subjects').orderBy('order').get();
+    const grid=$('subj-grid');
+    if(snap.empty){grid.innerHTML='<span style="font-size:.8rem;color:var(--t3)">No subjects configured yet.</span>';return;}
+    grid.innerHTML='';
+    snap.forEach(d=>{
+      const s={id:d.id,...d.data()};
+      const el=document.createElement('label');
+      el.className='subj-opt';el.dataset.id=s.id;
+      el.innerHTML=`<input type="checkbox" value="${s.id}"/><div class="mark"></div><span class="nm">${esc(s.name)}</span>`;
+      el.addEventListener('click',()=>{
+        el.classList.toggle('sel');
+        const chk=el.querySelector('input');chk.checked=!chk.checked;
+        if(chk.checked)selectedSubjects.push(s.id);
+        else selectedSubjects=selectedSubjects.filter(x=>x!==s.id);
+      });
+      grid.appendChild(el);
+    });
+  }catch(e){$('subj-grid').innerHTML='<span style="font-size:.8rem;color:var(--t3)">Could not load subjects.</span>';}
+}
+loadSubjects();
+
+// Phone verification
+function initRecaptcha(){
+  if(recaptchaVerifier)return;
+  recaptchaVerifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{'size':'normal','callback':()=>{$('btn-otp').disabled=false;},'expired-callback':()=>{$('btn-otp').disabled=true;}});
+  recaptchaVerifier.render();
+}
+
+$('btn-otp').addEventListener('click',async()=>{
+  const phone=$('r-phone').value.trim();
+  if(!phone){toast('Enter phone number first.','err');return;}
+  initRecaptcha();
+  $('btn-otp').disabled=true;$('btn-otp').textContent='Sending…';
+  try{
+    confirmResult=await auth.signInWithPhoneNumber(phone,recaptchaVerifier);
+    $('otp-row').style.display='flex';
+    toast('OTP sent!','ok');
+    $('btn-otp').textContent='Resend';$('btn-otp').disabled=false;
+  }catch(e){toast('OTP error: '+e.message,'err');$('btn-otp').textContent='Send OTP';$('btn-otp').disabled=false;}
+});
+
+$('btn-verify').addEventListener('click',async()=>{
+  const code=$('r-otp').value.trim();
+  if(!code||!confirmResult){toast('Enter OTP first.','err');return;}
+  $('btn-verify').disabled=true;$('btn-verify').textContent='…';
+  try{
+    await confirmResult.confirm(code);
+    phoneVerified=true;
+    $('phone-verified').style.display='flex';
+    $('otp-row').style.display='none';
+    $('btn-otp').style.display='none';
+    toast('Phone verified!','ok');
+    // Sign out the phone-auth temporary user — we'll create proper account
+    await auth.signOut();
+  }catch(e){toast('Wrong OTP.','err');$('btn-verify').disabled=false;$('btn-verify').textContent='Verify';}
+});
+
+// Submit registration
+$('r-btn').addEventListener('click',async()=>{
+  const name=$('r-name').value.trim();
+  const email=$('r-email').value.trim();
+  const pw=$('r-pw').value;
+  const pw2=$('r-pw2').value;
+  const phone=$('r-phone').value.trim();
+  const note=$('r-note').value.trim();
+  $('r-err').textContent='';
+
+  if(!name){$('r-err').textContent='Full name is required.';return;}
+  if(!email||!email.includes('@')){$('r-err').textContent='Valid email is required.';return;}
+  if(!pw||pw.length<6){$('r-err').textContent='Password must be at least 6 characters.';return;}
+  if(pw!==pw2){$('r-err').textContent='Passwords do not match.';return;}
+  if(selectedSubjects.length===0){$('r-err').textContent='Please select at least one subject.';return;}
+
+  $('r-btn').innerHTML='<div class="spin" style="display:inline-block"></div>';$('r-btn').disabled=true;
+
+  try{
+    // Create auth account
+    const cred=await auth.createUserWithEmailAndPassword(email,pw);
+    const uid=cred.user.uid;
+    await cred.user.updateProfile({displayName:name});
+
+    // Save to users collection — status pending
+    await db.collection('users').doc(uid).set({
+      uid,email,displayName:name,
+      phone:phone||'',
+      phoneVerified,
+      role:'teacher',
+      status:'pending',  // admin must approve
+      subjects:selectedSubjects,
+      note,
+      photoURL:'',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      lastLogin:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    await auth.signOut(); // Sign out — must wait for approval
+    $('form-wrap').style.display='none';
+    $('success-screen').style.display='block';
+  }catch(e){
+    let msg=e.message;
+    if(e.code==='auth/email-already-in-use')msg='This email is already registered. Try signing in.';
+    $('r-err').textContent=msg;
+    $('r-btn').innerHTML='Submit Registration Request';$('r-btn').disabled=false;
+  }
+});
+
+function esc(s){return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
+</body>
+</html>
