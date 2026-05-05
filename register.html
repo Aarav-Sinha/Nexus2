@@ -1,204 +1,633 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>Register — Nexus</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%231a0e2e'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='26' font-family='serif'%3E✦%3C/text%3E%3C/svg%3E"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="shared.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px}
-.card{position:relative;z-index:1;width:100%;max-width:520px;border-radius:var(--r3);background:linear-gradient(145deg,rgba(26,21,48,.97),rgba(20,16,36,.99));border:1px solid rgba(232,201,107,.18);padding:46px 42px 40px;box-shadow:var(--sh),inset 0 1px 0 rgba(255,255,255,.06);animation:ascend .65s cubic-bezier(.16,1,.3,1) both}
-.star{font-size:2rem;display:block;text-align:center;margin-bottom:14px;filter:drop-shadow(0 0 16px rgba(232,201,107,.5))}
-h1{font-family:var(--serif);font-size:2.2rem;font-weight:700;text-align:center;background:linear-gradient(135deg,#f0ecff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:5px}
-.sub{text-align:center;color:var(--t2);font-size:.83rem;margin-bottom:28px;line-height:1.5}
-.tag{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;font-family:var(--mono);color:var(--teal);background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.15);border-radius:6px;padding:2px 8px;margin-bottom:4px}
-.form{display:flex;flex-direction:column;gap:16px}
-/* Subject checkboxes */
-.subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:190px;overflow-y:auto;padding:2px}
-.subj-opt{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;border:1px solid var(--rim);cursor:pointer;transition:all .18s;background:rgba(255,255,255,.02);user-select:none}
-.subj-opt:hover{border-color:rgba(232,201,107,.25);background:rgba(232,201,107,.05)}
-.subj-opt.sel{border-color:rgba(232,201,107,.35);background:rgba(232,201,107,.1)}
-.subj-mark{width:16px;height:16px;border-radius:4px;border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:all .15s;color:transparent}
-.subj-opt.sel .subj-mark{background:var(--gold);border-color:var(--gold);color:#0d0a1a}
-.subj-nm{font-size:.8rem;color:var(--t1)}
-.btn-sub{width:100%;padding:14px;border-radius:11px;border:none;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;background:var(--gold);color:#0d0a1a;display:flex;align-items:center;justify-content:center;gap:9px}
-.btn-sub:hover{background:var(--gold2);box-shadow:var(--shg);transform:translateY(-1px)}
-.btn-sub:disabled{opacity:.38;cursor:default;transform:none;box-shadow:none}
-.err{font-size:.73rem;color:var(--rose);min-height:18px}
-.note{font-size:.7rem;color:var(--t3);text-align:center;margin-top:12px}
-.note a{color:var(--gold)}
-.cred{text-align:center;padding-top:18px;margin-top:18px;border-top:1px solid var(--rim);font-size:.66rem;color:var(--t3);font-family:var(--mono)}
-.cred b{color:rgba(232,201,107,.45)}
-/* Success */
-.success{display:none;text-align:center;padding:16px 0}
-.success-ic{font-size:3rem;margin-bottom:14px;filter:drop-shadow(0 0 16px rgba(123,198,126,.5))}
-.success-t{font-family:var(--serif);font-size:1.8rem;font-weight:600;color:var(--t0);margin-bottom:8px}
-.success-s{font-size:.85rem;color:var(--t2);line-height:1.6;margin-bottom:20px}
-.spin-g{width:18px;height:18px;border-radius:50%;border:2px solid rgba(13,10,26,.25);border-top-color:#0d0a1a;animation:spin .75s linear infinite}
-@media(max-width:480px){.card{padding:32px 20px 28px}.subj-grid{grid-template-columns:1fr}}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; font-size: 16px; }
+body {
+  min-height: 100%;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0d0a1a;
+  color: #f0ecff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 20px 48px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.bg-grad {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 5%, rgba(100,60,180,.3) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 88% 95%, rgba(40,100,120,.22) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 40% at 50% 50%, rgba(232,201,107,.05) 0%, transparent 65%);
+}
+.orb { position: absolute; border-radius: 50%; filter: blur(90px); animation: orb-f 22s ease-in-out infinite; }
+.orb-1 { width: 450px; height: 450px; background: rgba(110,65,220,.2); top: -12%; left: -8%; animation-delay: 0s; }
+.orb-2 { width: 350px; height: 350px; background: rgba(232,201,107,.1); bottom: 5%; right: -5%; animation-delay: -9s; }
+.orb-3 { width: 250px; height: 250px; background: rgba(78,205,196,.09); top: 40%; right: 20%; animation-delay: -17s; }
+@keyframes orb-f {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(18px,-14px) scale(1.04); }
+  66% { transform: translate(-12px,18px) scale(.97); }
+}
+
+/* ── Card ── */
+.card {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 520px;
+  background: linear-gradient(160deg, rgba(28,23,52,.97) 0%, rgba(18,14,32,.99) 100%);
+  border: 1px solid rgba(232,201,107,.2);
+  border-radius: 24px;
+  padding: 48px 44px 42px;
+  box-shadow:
+    0 24px 64px rgba(0,0,0,.72),
+    0 0 0 1px rgba(232,201,107,.06),
+    inset 0 1px 0 rgba(255,255,255,.07);
+  animation: card-rise .7s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes card-rise {
+  from { opacity: 0; transform: translateY(32px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 30px; }
+.star {
+  font-size: 2.6rem; line-height: 1; margin-bottom: 12px; display: block;
+  filter: drop-shadow(0 0 20px rgba(232,201,107,.6));
+  animation: star-pulse 3.2s ease-in-out infinite;
+}
+@keyframes star-pulse {
+  0%,100% { filter: drop-shadow(0 0 16px rgba(232,201,107,.5)); }
+  50%      { filter: drop-shadow(0 0 36px rgba(232,201,107,.9)); }
+}
+.title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.5rem; font-weight: 700;
+  background: linear-gradient(140deg, #f0ecff 10%, #e8c96b 65%, #f5dfa0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1; margin-bottom: 7px;
+}
+.subtitle { font-size: .86rem; color: rgba(200,194,224,.62); line-height: 1.55; }
+.subtitle .note { font-size: .78rem; color: rgba(74,70,104,.9); display: block; margin-top: 4px; }
+
+/* ── Progress steps ── */
+.steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 28px; }
+.step {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  flex: 1;
+}
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; font-weight: 700; transition: all .3s;
+  border: 2px solid rgba(255,255,255,.1);
+  color: rgba(74,70,104,.8); background: transparent;
+}
+.step.active .step-dot {
+  background: #e8c96b; color: #0d0a1a; border-color: #e8c96b;
+  box-shadow: 0 0 0 3px rgba(232,201,107,.2);
+}
+.step.done .step-dot {
+  background: rgba(123,198,126,.2); color: #7bc67e; border-color: rgba(123,198,126,.4);
+}
+.step-label { font-size: .65rem; color: rgba(132,127,160,.6); white-space: nowrap; }
+.step.active .step-label { color: #e8c96b; }
+.step.done .step-label { color: rgba(123,198,126,.8); }
+.step-line { flex: 0 0 32px; height: 1px; background: rgba(255,255,255,.08); margin-bottom: 20px; }
+
+/* ── Form sections ── */
+.section { display: none; }
+.section.active { display: flex; flex-direction: column; gap: 15px; }
+
+/* ── Field ── */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: .72rem; font-weight: 600; letter-spacing: .07em;
+  text-transform: uppercase; color: rgba(132,127,160,.9);
+}
+.field-input, .field-select, .field-textarea {
+  width: 100%; padding: 13px 16px;
+  background: rgba(255,255,255,.045);
+  border: 1.5px solid rgba(255,255,255,.1);
+  border-radius: 11px;
+  color: #f0ecff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  -webkit-appearance: none; appearance: none;
+}
+.field-input:focus, .field-select:focus, .field-textarea:focus {
+  outline: none;
+  border-color: rgba(232,201,107,.5);
+  background: rgba(232,201,107,.06);
+  box-shadow: 0 0 0 3px rgba(232,201,107,.1);
+}
+.field-input::placeholder, .field-textarea::placeholder { color: rgba(74,70,104,.8); }
+.field-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px rgba(28,23,52,.97) inset;
+  -webkit-text-fill-color: #f0ecff;
+  border-color: rgba(232,201,107,.35);
+}
+.field-select option { background: #140f22; color: #f0ecff; }
+.field-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+.field-hint { font-size: .69rem; color: rgba(74,70,104,.85); margin-top: 2px; line-height: 1.4; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ── Subject checkboxes ── */
+.subj-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  max-height: 200px; overflow-y: auto; padding: 2px;
+}
+.subj-grid::-webkit-scrollbar { width: 3px; }
+.subj-grid::-webkit-scrollbar-thumb { background: rgba(232,201,107,.2); border-radius: 99px; }
+.subj-option {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 13px; border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,.08);
+  cursor: pointer; transition: all .18s;
+  background: rgba(255,255,255,.02);
+  user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.subj-option:hover { border-color: rgba(232,201,107,.28); background: rgba(232,201,107,.06); }
+.subj-option.selected { border-color: rgba(232,201,107,.42); background: rgba(232,201,107,.1); }
+.subj-check {
+  width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; transition: all .15s; color: transparent;
+}
+.subj-option.selected .subj-check {
+  background: #e8c96b; border-color: #e8c96b; color: #0d0a1a;
+}
+.subj-name { font-size: .82rem; color: rgba(200,194,224,.9); line-height: 1.3; }
+
+/* ── Buttons ── */
+.btn-row { display: flex; gap: 10px; margin-top: 4px; }
+.btn {
+  padding: 13px 20px; border-radius: 11px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: .96rem; font-weight: 600;
+  cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 9px;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-primary {
+  flex: 1; background: #e8c96b; color: #0d0a1a;
+}
+.btn-primary:hover { background: #f5dfa0; box-shadow: 0 8px 28px rgba(232,201,107,.35); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: .42; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-back {
+  background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.1); color: rgba(200,194,224,.8);
+  padding: 13px 18px;
+}
+.btn-back:hover { background: rgba(255,255,255,.1); color: #f0ecff; }
+
+/* ── Error ── */
+.error-text { font-size: .75rem; color: #ff7b7b; min-height: 18px; }
+
+/* ── Divider ── */
+.div-line { height: 1px; background: rgba(255,255,255,.07); margin: 6px 0; }
+
+/* ── Success screen ── */
+.success {
+  display: none; flex-direction: column; align-items: center;
+  text-align: center; padding: 16px 0;
+}
+.success.show { display: flex; }
+.success-ic {
+  font-size: 3.2rem; margin-bottom: 16px;
+  filter: drop-shadow(0 0 18px rgba(123,198,126,.5));
+  animation: success-pop .6s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes success-pop {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.success-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: #f0ecff; margin-bottom: 8px; }
+.success-body { font-size: .86rem; color: rgba(200,194,224,.7); line-height: 1.65; margin-bottom: 24px; max-width: 360px; }
+.btn-goto {
+  padding: 13px 28px; border-radius: 11px; background: rgba(232,201,107,.15);
+  border: 1.5px solid rgba(232,201,107,.3); color: #e8c96b;
+  font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600;
+  cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block;
+}
+.btn-goto:hover { background: rgba(232,201,107,.25); box-shadow: 0 8px 24px rgba(232,201,107,.2); transform: translateY(-1px); }
+
+/* ── Links ── */
+.links { text-align: center; margin-top: 20px; display: flex; flex-direction: column; gap: 7px; }
+.link-text { font-size: .8rem; color: rgba(132,127,160,.75); }
+.link-text a { color: #e8c96b; text-decoration: none; font-weight: 500; }
+.link-text a:hover { color: #f5dfa0; }
+
+/* ── Credits ── */
+.credits {
+  text-align: center; margin-top: 24px; padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  font-size: .68rem; color: rgba(74,70,104,.75); letter-spacing: .04em;
+}
+.credits b { color: rgba(232,201,107,.5); }
+
+/* ── Spinner ── */
+.spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2.5px solid rgba(13,10,26,.25); border-top-color: #0d0a1a;
+  animation: spin .7s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(70px);
+  z-index: 999; background: rgba(26,21,48,.97);
+  border: 1px solid rgba(255,255,255,.1); border-radius: 12px;
+  padding: 12px 22px; font-size: .84rem; color: #f0ecff;
+  box-shadow: 0 20px 60px rgba(0,0,0,.7);
+  transition: transform .32s cubic-bezier(.16,1,.3,1), opacity .32s;
+  opacity: 0; pointer-events: none; white-space: nowrap;
+}
+.toast.show  { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.ok    { border-color: rgba(123,198,126,.35); color: #7bc67e; }
+.toast.err   { border-color: rgba(255,123,123,.35); color: #ff7b7b; }
+
+/* ── Mobile ── */
+@media (max-width: 540px) {
+  body { padding: 20px 14px 40px; }
+  .card { padding: 36px 20px 32px; border-radius: 20px; }
+  .title { font-size: 2.1rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .subj-grid { grid-template-columns: 1fr; }
+  .step-label { font-size: .6rem; }
+}
 </style>
 </head>
 <body>
-<div class="page-bg"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
 
+<!-- Background -->
+<div class="bg">
+  <div class="bg-grad"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Card -->
 <div class="card">
-  <span class="star">✦</span>
-  <h1>Register</h1>
-  <p class="sub">Create your teacher account<br><span style="font-size:.75rem;color:var(--t3)">Pending admin approval before you can sign in</span></p>
 
-  <!-- FORM -->
-  <div id="form-wrap" class="form">
-    <div class="form-2col">
-      <div class="fg"><label>Full Name *</label><input class="fi" id="r-name" placeholder="Your full name" autocomplete="name"/></div>
-      <div class="fg"><label>Email *</label><input class="fi" id="r-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
+  <!-- Header -->
+  <div class="header">
+    <span class="star">✦</span>
+    <div class="title">Join Nexus</div>
+    <div class="subtitle">
+      Register as a teacher to get started.
+      <span class="note">Accounts are reviewed and approved by admin before activation.</span>
     </div>
-    <div class="form-2col">
-      <div class="fg"><label>Password *</label><input class="fi" id="r-pw" type="password" placeholder="Min 6 characters"/></div>
-      <div class="fg"><label>Confirm Password *</label><input class="fi" id="r-pw2" type="password" placeholder="Repeat password"/></div>
-    </div>
+  </div>
 
-    <!-- Subjects -->
-    <div class="fg">
-      <label>Subjects You Teach * <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.65rem;opacity:.6">(select all that apply)</span></label>
-      <div class="subj-grid" id="subj-grid">
-        <div style="color:var(--t3);font-size:.8rem;padding:8px;display:flex;align-items:center;gap:8px"><div class="spin" style="width:14px;height:14px;border-width:1.5px"></div> Loading subjects…</div>
+  <!-- Steps indicator -->
+  <div class="steps" id="steps-indicator">
+    <div class="step active" id="step-1-ind">
+      <div class="step-dot">1</div>
+      <div class="step-label">Account</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-2-ind">
+      <div class="step-dot">2</div>
+      <div class="step-label">Subjects</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-3-ind">
+      <div class="step-dot">3</div>
+      <div class="step-label">Submit</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Account Info -->
+  <div class="section active" id="section-1">
+    <div class="two-col">
+      <div class="field">
+        <label class="field-label" for="r-name">Full Name *</label>
+        <input class="field-input" id="r-name" name="fullname" type="text"
+          placeholder="Your full name" autocomplete="name"
+          autocorrect="off" autocapitalize="words" spellcheck="false"/>
       </div>
-      <span class="fi-hint">Only subjects assigned by admin will be accessible to you.</span>
+      <div class="field">
+        <label class="field-label" for="r-email">Email Address *</label>
+        <input class="field-input" id="r-email" name="email" type="email"
+          placeholder="you@example.com" autocomplete="email"
+          inputmode="email" autocorrect="off" autocapitalize="none" spellcheck="false"/>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label class="field-label" for="r-pw">Password *</label>
+        <input class="field-input" id="r-pw" name="new-password" type="password"
+          placeholder="Min 6 characters" autocomplete="new-password"/>
+        <span class="field-hint">At least 6 characters.</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="r-pw2">Confirm Password *</label>
+        <input class="field-input" id="r-pw2" name="confirm-password" type="password"
+          placeholder="Repeat password" autocomplete="new-password"/>
+      </div>
+    </div>
+    <div class="error-text" id="err-1"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-next-1" type="button">
+        Continue →
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Subject Selection -->
+  <div class="section" id="section-2">
+    <div class="field">
+      <label class="field-label">Subjects You Teach *</label>
+      <div class="subj-grid" id="subj-grid">
+        <div style="color:rgba(132,127,160,.6);font-size:.82rem;padding:8px;display:flex;align-items:center;gap:8px;grid-column:1/-1">
+          <div class="spinner" style="border-top-color:rgba(232,201,107,.8)"></div> Loading subjects…
+        </div>
+      </div>
+      <span class="field-hint">Select all subjects you teach. You can only access your assigned subjects.</span>
+    </div>
+    <div class="error-text" id="err-2"></div>
+    <div class="btn-row">
+      <button class="btn btn-back" type="button" onclick="goToStep(1)">← Back</button>
+      <button class="btn btn-primary" id="btn-next-2" type="button">
+        Continue →
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Note & Submit -->
+  <div class="section" id="section-3">
+    <div style="padding:14px 16px;border-radius:11px;background:rgba(232,201,107,.07);border:1px solid rgba(232,201,107,.18);font-size:.82rem;color:rgba(200,194,224,.85);line-height:1.55">
+      ✦ <strong style="color:#e8c96b">Almost there!</strong> Review your details and add an optional note to the admin.
     </div>
 
-    <!-- Note -->
-    <div class="fg">
-      <label>Note to Admin <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.65rem;opacity:.5">(optional)</span></label>
-      <textarea class="fta" id="r-note" placeholder="e.g. I teach English for Classes 11 & 12 ISC…" style="min-height:72px"></textarea>
+    <!-- Summary -->
+    <div style="padding:14px 16px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(132,127,160,.7);margin-bottom:10px">Registration Summary</div>
+      <div id="summary" style="font-size:.84rem;color:rgba(200,194,224,.85);line-height:1.8"></div>
     </div>
 
-    <div class="err" id="r-err"></div>
-    <button class="btn-sub" id="r-btn">Submit Registration Request</button>
-    <p class="note">Already have an account? <a href="login.html">Sign in here</a></p>
-    <p class="note"><a href="index.html">← Back to home</a></p>
+    <div class="field">
+      <label class="field-label" for="r-note">Note to Admin <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.72rem;opacity:.55">(optional)</span></label>
+      <textarea class="field-textarea" id="r-note" name="note"
+        placeholder="e.g. I teach English for Classes 11 & 12 ISC…"
+        autocorrect="off" spellcheck="true"></textarea>
+    </div>
+    <div class="error-text" id="err-3"></div>
+    <div class="btn-row">
+      <button class="btn btn-back" type="button" onclick="goToStep(2)">← Back</button>
+      <button class="btn btn-primary" id="btn-submit" type="button">
+        Submit Request
+      </button>
+    </div>
   </div>
 
   <!-- SUCCESS -->
   <div class="success" id="success-screen">
     <div class="success-ic">✅</div>
-    <div class="success-t">Request Submitted!</div>
-    <p class="success-s">Your registration has been sent to the admin for review.<br>Once approved, you can sign in with your credentials.</p>
-    <a href="login.html" class="btn btn-gold btn-lg btn-full" style="text-decoration:none">Go to Sign In →</a>
+    <div class="success-title">Request Sent!</div>
+    <p class="success-body">Your registration has been submitted for admin review. You'll be able to sign in once your account is approved.</p>
+    <a href="login.html" class="btn-goto">Go to Sign In →</a>
   </div>
 
-  <div class="cred">Developed by <b>Aarav Sinha</b></div>
+  <!-- Links (hidden after success) -->
+  <div class="links" id="links-row">
+    <div class="link-text">Already have an account? <a href="login.html">Sign in here</a></div>
+    <div class="link-text"><a href="index.html">← Back to home</a></div>
+  </div>
+
+  <div class="credits">Developed by <b>Aarav Sinha</b> · Nexus Study Portal</div>
 </div>
+
 <div class="toast" id="toast"></div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
 <script>
-const FC={apiKey:"AIzaSyCqEEBANVyt-ybQD8z-pys2V-07-lxEWjA",authDomain:"nexus-705ef.firebaseapp.com",projectId:"nexus-705ef",storageBucket:"nexus-705ef.firebasestorage.app",messagingSenderId:"982944171585",appId:"1:982944171585:web:de65b6827ca769565ba8c0"};
-const ADMIN="aaravhfs@gmail.com";
-if(!firebase.apps.length)firebase.initializeApp(FC);
-const auth=firebase.auth(),db=firebase.firestore();
-const $=id=>document.getElementById(id);
-let selectedSubjects=[];
+/* ════════════════════════════════
+   NEXUS REGISTER · by Aarav Sinha
+════════════════════════════════ */
+const FC = {
+  apiKey: "AIzaSyCqEEBANVyt-ybQD8z-pys2V-07-lxEWjA",
+  authDomain: "nexus-705ef.firebaseapp.com",
+  projectId: "nexus-705ef",
+  storageBucket: "nexus-705ef.firebasestorage.app",
+  messagingSenderId: "982944171585",
+  appId: "1:982944171585:web:de65b6827ca769565ba8c0"
+};
+const ADMIN_EMAIL = "aaravhfs@gmail.com";
 
-function toast(msg,type){const t=$('toast');t.textContent=msg;t.className='toast show'+(type==='ok'?' ok':type==='err'?' err':'');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3400);}
-function esc(s){return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+if (!firebase.apps.length) firebase.initializeApp(FC);
+const auth = firebase.auth();
+const db   = firebase.firestore();
 
-// If already logged in redirect
-auth.onAuthStateChanged(async u=>{
-  if(u){
-    if(u.email===ADMIN){window.location.href='admin.html';return;}
-    try{
-      const snap=await db.collection('users').doc(u.uid).get();
-      if(snap.exists&&snap.data().status==='approved'){window.location.href='user.html';return;}
-    }catch(e){}
-  }
+let currentStep = 1;
+let selectedSubjects = [];
+let allSubjects = [];
+const toastEl = document.getElementById('toast');
+
+/* ── If already logged in, redirect ── */
+auth.onAuthStateChanged(async u => {
+  if (!u) return;
+  if (u.email === ADMIN_EMAIL) { window.location.href = 'admin.html'; return; }
+  try {
+    const snap = await db.collection('users').doc(u.uid).get();
+    if (snap.exists && snap.data().status === 'approved') { window.location.href = 'user.html'; return; }
+  } catch (e) {}
 });
 
-// Load subjects
-async function loadSubjects(){
-  const grid=$('subj-grid');
-  try{
-    const snap=await db.collection('subjects').orderBy('order').get();
-    if(snap.empty){
-      grid.innerHTML='<span style="font-size:.8rem;color:var(--t3);padding:8px">No subjects added yet. Check back later.</span>';
+/* ── Toast ── */
+function showToast(msg, type = '') {
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show' + (type === 'ok' ? ' ok' : type === 'err' ? ' err' : '');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => toastEl.classList.remove('show'), 3600);
+}
+
+/* ── Load subjects ── */
+async function loadSubjects() {
+  const grid = document.getElementById('subj-grid');
+  try {
+    const snap = await db.collection('subjects').orderBy('order').get();
+    if (snap.empty) {
+      grid.innerHTML = '<div style="color:rgba(132,127,160,.65);font-size:.82rem;padding:8px;grid-column:1/-1">No subjects configured yet. Please check back later or contact admin.</div>';
       return;
     }
-    grid.innerHTML='';
-    snap.forEach(d=>{
-      const s={id:d.id,...d.data()};
-      const el=document.createElement('div');
-      el.className='subj-opt';
-      el.dataset.id=s.id;
-      el.innerHTML=`<div class="subj-mark">✓</div><span class="subj-nm">${esc(s.name)}</span>`;
-      el.addEventListener('click',()=>{
-        const sel=el.classList.toggle('sel');
-        if(sel){ if(!selectedSubjects.includes(s.id)) selectedSubjects.push(s.id); }
-        else selectedSubjects=selectedSubjects.filter(x=>x!==s.id);
+    allSubjects = [];
+    snap.forEach(d => allSubjects.push({ id: d.id, ...d.data() }));
+    grid.innerHTML = '';
+    allSubjects.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'subj-option';
+      el.dataset.id = s.id;
+      el.innerHTML = `
+        <div class="subj-check">✓</div>
+        <span class="subj-name">${escHtml(s.emoji || '')} ${escHtml(s.name)}</span>`;
+      el.addEventListener('click', () => {
+        const isSelected = el.classList.toggle('selected');
+        if (isSelected) {
+          if (!selectedSubjects.includes(s.id)) selectedSubjects.push(s.id);
+        } else {
+          selectedSubjects = selectedSubjects.filter(x => x !== s.id);
+        }
       });
       grid.appendChild(el);
     });
-  }catch(e){
-    grid.innerHTML='<span style="font-size:.8rem;color:var(--rose);padding:8px">Could not load subjects.</span>';
+  } catch (e) {
+    grid.innerHTML = `<div style="color:#ff7b7b;font-size:.82rem;padding:8px;grid-column:1/-1">Could not load subjects: ${escHtml(e.message)}</div>`;
   }
 }
 loadSubjects();
 
-// Submit
-$('r-btn').addEventListener('click',async()=>{
-  const name=$('r-name').value.trim();
-  const email=$('r-email').value.trim();
-  const pw=$('r-pw').value;
-  const pw2=$('r-pw2').value;
-  const note=$('r-note').value.trim();
-  $('r-err').textContent='';
+/* ── Step navigation ── */
+function goToStep(n) {
+  // Hide current
+  document.getElementById(`section-${currentStep}`).classList.remove('active');
+  document.getElementById(`step-${currentStep}-ind`).classList.remove('active');
+  document.getElementById(`step-${currentStep}-ind`).classList.add('done');
+  // Show new
+  currentStep = n;
+  document.getElementById(`section-${n}`).classList.add('active');
+  document.getElementById(`step-${n}-ind`).classList.remove('done');
+  document.getElementById(`step-${n}-ind`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Clear errors
+  ['err-1','err-2','err-3'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+}
 
-  if(!name){$('r-err').textContent='Full name is required.';return;}
-  if(!email||!email.includes('@')){$('r-err').textContent='A valid email is required.';return;}
-  if(!pw||pw.length<6){$('r-err').textContent='Password must be at least 6 characters.';return;}
-  if(pw!==pw2){$('r-err').textContent='Passwords do not match.';return;}
-  if(selectedSubjects.length===0){$('r-err').textContent='Please select at least one subject.';return;}
+/* ── Step 1 validation ── */
+document.getElementById('btn-next-1').addEventListener('click', () => {
+  const name  = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const pw    = document.getElementById('r-pw').value;
+  const pw2   = document.getElementById('r-pw2').value;
+  const err1  = document.getElementById('err-1');
+  err1.textContent = '';
 
-  $('r-btn').innerHTML='<div class="spin-g"></div> Submitting…';
-  $('r-btn').disabled=true;
+  if (!name)                      { err1.textContent = 'Please enter your full name.'; document.getElementById('r-name').focus(); return; }
+  if (!email || !email.includes('@')) { err1.textContent = 'Please enter a valid email address.'; document.getElementById('r-email').focus(); return; }
+  if (!pw || pw.length < 6)       { err1.textContent = 'Password must be at least 6 characters.'; document.getElementById('r-pw').focus(); return; }
+  if (pw !== pw2)                  { err1.textContent = 'Passwords do not match.'; document.getElementById('r-pw2').focus(); return; }
 
-  try{
+  goToStep(2);
+});
+
+/* ── Step 2 validation ── */
+document.getElementById('btn-next-2').addEventListener('click', () => {
+  const err2 = document.getElementById('err-2');
+  err2.textContent = '';
+  if (selectedSubjects.length === 0) {
+    err2.textContent = 'Please select at least one subject you teach.';
+    return;
+  }
+  // Build summary
+  const name  = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const subjectNames = selectedSubjects.map(id => {
+    const s = allSubjects.find(x => x.id === id);
+    return s ? `${s.emoji || ''} ${s.name}`.trim() : id;
+  }).join(', ');
+  document.getElementById('summary').innerHTML =
+    `<div><b style="color:rgba(200,194,224,.6)">Name:</b> ${escHtml(name)}</div>
+     <div><b style="color:rgba(200,194,224,.6)">Email:</b> ${escHtml(email)}</div>
+     <div><b style="color:rgba(200,194,224,.6)">Subjects:</b> ${escHtml(subjectNames)}</div>`;
+  goToStep(3);
+});
+
+/* ── Step 3: Submit ── */
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  const name  = document.getElementById('r-name').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const pw    = document.getElementById('r-pw').value;
+  const note  = document.getElementById('r-note').value.trim();
+  const err3  = document.getElementById('err-3');
+  err3.textContent = '';
+
+  const btn = document.getElementById('btn-submit');
+  btn.innerHTML = '<div class="spinner"></div> Submitting…';
+  btn.disabled = true;
+
+  try {
     // Create Firebase Auth account
-    const cred=await auth.createUserWithEmailAndPassword(email,pw);
-    const uid=cred.user.uid;
-    await cred.user.updateProfile({displayName:name});
+    const cred = await auth.createUserWithEmailAndPassword(email, pw);
+    const uid  = cred.user.uid;
+
+    // Update display name
+    await cred.user.updateProfile({ displayName: name });
 
     // Save to Firestore users collection — status: pending
     await db.collection('users').doc(uid).set({
       uid,
       email,
-      displayName:name,
-      role:'teacher',
-      status:'pending',
-      subjects:selectedSubjects,
+      displayName: name,
+      role: 'teacher',
+      status: 'pending',
+      subjects: selectedSubjects,
       note,
-      photoURL:'',
-      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-      lastLogin:firebase.firestore.FieldValue.serverTimestamp()
+      photoURL: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
     });
 
     // Sign out — must wait for admin approval
     await auth.signOut();
 
-    $('form-wrap').style.display='none';
-    $('success-screen').style.display='block';
+    // Show success
+    document.getElementById('steps-indicator').style.display = 'none';
+    ['section-1','section-2','section-3'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    document.getElementById('links-row').style.display = 'none';
+    document.getElementById('success-screen').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  }catch(e){
-    let msg=e.message;
-    if(e.code==='auth/email-already-in-use')msg='This email is already registered. Try signing in.';
-    if(e.code==='auth/invalid-email')msg='Invalid email address.';
-    $('r-err').textContent=msg;
-    $('r-btn').innerHTML='Submit Registration Request';
-    $('r-btn').disabled=false;
+  } catch (e) {
+    let msg = 'Registration failed. Please try again.';
+    if (e.code === 'auth/email-already-in-use') msg = 'This email is already registered. Try signing in instead.';
+    if (e.code === 'auth/invalid-email')         msg = 'Invalid email address.';
+    if (e.code === 'auth/weak-password')          msg = 'Password is too weak. Use at least 6 characters.';
+    err3.textContent = msg;
+    btn.innerHTML = 'Submit Request';
+    btn.disabled = false;
   }
 });
+
+/* ── Enter key on fields ── */
+['r-name','r-email','r-pw','r-pw2'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('btn-next-1').click();
+    }
+  });
+});
+
+/* ── Helpers ── */
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── Expose goToStep globally ── */
+window.goToStep = goToStep;
 </script>
 </body>
 </html>
